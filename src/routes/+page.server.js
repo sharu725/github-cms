@@ -1,4 +1,4 @@
-import { GITHUB_TOKEN } from "$env/static/private";
+import fetcher from "$lib/fetcher";
 
 const query = `{
   repository(name: "github-cms", owner: "sharu725") {
@@ -12,22 +12,13 @@ const query = `{
 }`;
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load() {
-  const res = await fetch("https://api.github.com/graphql", {
-    method: "POST",
-    headers: {
-      Authorization: `bearer ${GITHUB_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query }),
-  });
+export async function load({ fetch }) {
+  const res = await fetcher(query, {}, fetch);
   const {
-    data: {
-      repository: {
-        discussions: { nodes },
-      },
+    repository: {
+      discussions: { nodes },
     },
-  } = await res.json();
+  } = res;
 
   return {
     nodes,
