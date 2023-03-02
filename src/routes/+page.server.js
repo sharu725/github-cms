@@ -7,6 +7,7 @@ const query = `{
       nodes {
         title
         number
+        bodyHTML
       }
     }
   }
@@ -20,8 +21,13 @@ export async function load({ fetch }) {
       discussions: { nodes },
     },
   } = res;
+  const imageRegex = /<img.*?src=['"](.*?)['"]/;
   nodes.map((node) => {
     node.slug = slugify(node.title);
+    const imageFound = imageRegex.exec(node.bodyHTML);
+    if (imageFound) {
+      node.image = imageFound[0].replace(/.*src="([^"]*)".*/, "$1");
+    }
   });
 
   return {

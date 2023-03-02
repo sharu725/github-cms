@@ -8,8 +8,11 @@
 <h1>Github CMS blog</h1>
 
 <ul>
-  {#each nodes as { title, number, slug }}
+  {#each nodes as { title, number, slug, image }}
     <li>
+      {#if image}
+        <img src={image} alt={title}>
+      {/if}
       <a href="/article/{slug}-{number}">{title}</a>
     </li>
   {/each}
