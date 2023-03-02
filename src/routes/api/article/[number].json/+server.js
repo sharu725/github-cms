@@ -1,4 +1,5 @@
 import fetcher from "$lib/fetcher";
+import { json } from "@sveltejs/kit";
 
 const query = `query GetDiscussion($number: Int!) {
   repository(name: "github-cms", owner: "sharu725") {
@@ -9,8 +10,7 @@ const query = `query GetDiscussion($number: Int!) {
   }
 }`;
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params: { number }, fetch }) {
+export const GET = async ({ params: { number }, fetch, setHeaders }) => {
   const variables = {
     number: parseInt(number),
   };
@@ -19,10 +19,12 @@ export async function load({ params: { number }, fetch }) {
       repository: { discussion },
     } = await fetcher(query, variables, fetch);
 
-    return {
-      discussion,
-    };
+    setHeaders({
+      "cache-control": "max-age=600",
+    });
+
+    return json(discussion);
   } catch (error) {
     console.log(error);
   }
-}
+};

@@ -1,4 +1,5 @@
 import fetcher from "$lib/fetcher";
+import slugify from "@sindresorhus/slugify";
 
 const query = `{
   repository(name: "github-cms", owner: "sharu725") {
@@ -19,6 +20,9 @@ export async function load({ fetch }) {
       discussions: { nodes },
     },
   } = res;
+  nodes.map((node) => {
+    node.slug = slugify(node.title);
+  });
 
   return {
     nodes,

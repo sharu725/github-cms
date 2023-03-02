@@ -8,9 +8,9 @@
 <h1>Github CMS blog</h1>
 
 <ul>
-  {#each nodes as { title, number }}
+  {#each nodes as { title, number, slug }}
     <li>
-      <a href="/article/{number}">{title}</a>
+      <a href="/article/{slug}-{number}">{title}</a>
     </li>
   {/each}
 </ul>
